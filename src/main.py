@@ -1,4 +1,5 @@
 import pygame
+import math
 from core.input import keys_down, safe_remove_key
 from core.camera import create_screen
 from components.entity import active_objs
@@ -7,6 +8,8 @@ from components.sprite import sprites
 from data.tile_types import tile_kinds
 from components.investigation import Investigation
 from components.journal import Journal
+from data.case_data import SCENARIO_TITLE, SCENARIO_INTRO
+
 #hellooooooooo
 # Set up 
 pygame.init()
@@ -18,6 +21,8 @@ screen = create_screen(1280, 720, "Murder Mystery Adventure")
 font = pygame.font.SysFont(None, 24)
 dialog_font = pygame.font.SysFont(None, 28)
 outcome_font = pygame.font.SysFont(None, 48)
+intro_font = pygame.font.SysFont(None, 26)
+title_font = pygame.font.SysFont(None, 40)
 
 clear_color = (30, 150, 240)
 running = True
@@ -41,8 +46,15 @@ outcome_fade_duration = 3000  # Time to fade in/out outcome display
 
 # Debug variables
 debug_last_space_press = 0
-debug_mode = True  # Set to True to enable debug messages
+debug_mode = False  # Set to True to enable debug messages
 
+# Scenario intro variables
+showing_intro = True
+intro_start_time = pygame.time.get_ticks()
+intro_duration = 15000  # Show intro for 15 seconds
+dismiss_intro_message = "Press any key to continue"
+
+# Initialize area with the map file
 area = Area("start.map", tile_kinds)
 
 # Game Loop
@@ -53,6 +65,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
+            # If showing intro, any key will dismiss it
+            if showing_intro:
+                showing_intro = False
+                
             keys_down.add(event.key)
             # Debug space key press
             if event.key == pygame.K_SPACE and debug_mode:
@@ -60,6 +76,56 @@ while running:
                 print("DEBUG: SPACE key pressed")
         elif event.type == pygame.KEYUP:
             safe_remove_key(event.key)
+
+    # Show scenario intro if needed
+    if showing_intro:
+        # Check if intro duration has elapsed
+        if current_time - intro_start_time > intro_duration:
+            showing_intro = False
+        else:
+            # Draw intro screen
+            screen.fill((0, 0, 0))  # Black background
+            
+            # Draw title
+            title_text = SCENARIO_TITLE
+            title_surface = title_font.render(title_text, True, (255, 215, 0))  # Gold color
+            screen.blit(title_surface, (screen.get_width() // 2 - title_surface.get_width() // 2, 100))
+            
+            # Draw intro text with word wrap
+            lines = []
+            words = SCENARIO_INTRO.split()
+            line = ""
+            max_width = screen.get_width() - 200
+            
+            for word in words:
+                test_line = line + word + " "
+                test_surface = intro_font.render(test_line, True, (255, 255, 255))
+                
+                if test_surface.get_width() > max_width:
+                    lines.append(line)
+                    line = word + " "
+                else:
+                    line = test_line
+                    
+            if line:
+                lines.append(line)
+                
+            y_offset = 180
+            for line in lines:
+                line_surface = intro_font.render(line, True, (255, 255, 255))
+                screen.blit(line_surface, (100, y_offset))
+                y_offset += 30
+                
+            # Draw dismiss message
+            # Make it blink by varying alpha based on time
+            alpha = int(127 + 127 * abs(math.sin(current_time / 500)))
+            dismiss_surface = intro_font.render(dismiss_intro_message, True, (200, 200, 200))
+            dismiss_surface.set_alpha(alpha)
+            screen.blit(dismiss_surface, (screen.get_width() // 2 - dismiss_surface.get_width() // 2, 600))
+            
+            pygame.display.flip()
+            pygame.time.delay(17)
+            continue  # Skip the rest of the loop
 
     # Update Code
     for a in active_objs:
@@ -104,12 +170,12 @@ while running:
         # Display investigation status
         if investigation:
             # Show clue count
-            clue_text = f"Clues found: {len(investigation.discovered_clues)}"
+            clue_text = f"Clues found: {len(investigation.discovered_clues)}/{len(SCENARIO_INTRO.split('clues'))}"
             clue_surface = font.render(clue_text, True, (255, 255, 255))
             screen.blit(clue_surface, (10, 10))
             
             # Show suspect count
-            suspect_text = f"Suspects interviewed: {len(investigation.interrogated_suspects)}"
+            suspect_text = f"Suspects interviewed: {len(investigation.interrogated_suspects)}/3"
             suspect_surface = font.render(suspect_text, True, (255, 255, 255))
             screen.blit(suspect_surface, (10, 40))
             

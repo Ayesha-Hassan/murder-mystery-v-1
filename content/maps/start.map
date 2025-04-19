@@ -36,9 +36,11 @@
 1,17,1 
 1,1,15
 2,8,8
-7,3,7,This is a bloody knife. The murder weapon?,Bloody Knife
-7,10,10,A torn piece of clothing was found here,Torn Fabric
-7,15,3,Footprints leading away from the crime scene,Footprints
-8,4,4,Alice,I was in the library all night,I didn't see anything unusual,false,suspect_alice.png
-8,9,9,Bob,I was at home with my wife,I heard a scream around midnight,false,suspect_bob.png
-8,14,14,Charlie,I was walking my dog,I saw someone running from the area,true,suspect_charlie.png
+7,3,7,A large rock covered in blood, found near the victim's body.,Bloody Rock
+7,10,10,A piece of green fabric torn from a jacket, caught on a branch near the crime scene.,Torn Jacket Piece
+7,15,3,A set of footprints leading from the campsite to the lake, and then away.,Footprints
+7,18,12,Thomas's smartphone with a text to Bob: 'Meet me by the lake at midnight.',Victim's Phone
+7,6,14,An empty whiskey bottle with fingerprints from Thomas and Charlie.,Empty Whiskey Bottle
+8,4,4,Alice Cooper,I was in my tent reading until I fell asleep around 10:30PM.,I heard Thomas arguing with someone around 10PM, but couldn't make out who it was. I found his body in the morning when I went for a walk.,false,suspect_alice.png
+8,9,9,Bob Johnson,I was fishing at the other side of the lake until around midnight, then went straight to sleep.,Thomas was threatening to report some... creative accounting I did that made us both look good. He suddenly grew a conscience.,true,suspect_bob.png
+8,14,14,Charlie Miller,I was drinking with Thomas until around 11PM, then went to sleep in my tent.,We actually had a good talk and cleared the air about my divorce. I'm sad we finally made peace just before he died.,false,suspect_charlie.png
