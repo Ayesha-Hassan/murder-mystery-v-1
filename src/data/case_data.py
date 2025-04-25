@@ -27,6 +27,7 @@ VICTIM = {
     "name": "Thomas Miller",
     "age": 32,
     "description": "An investment banker from the city. Known to be arrogant and competitive.",
+    "personality": "Thomas was ambitious and ruthless in his professional life, often stepping on others to get ahead. Despite this, he could be charming and generous with friends. He had a tendency to be condescending to those he felt were beneath him and was known for holding grudges. He was meticulous about his appearance and liked expensive things.",
     "relationships": {
         "Alice": "College friend. They dated briefly 5 years ago.",
         "Bob": "Coworker and longtime rival at the same investment firm.",
@@ -85,6 +86,9 @@ SUSPECTS = [
         "alibi": "I was in my tent reading until I fell asleep around 10:30PM.",
         "testimony": "I heard Thomas arguing with someone around 10PM, but couldn't make out who it was. I found his body in the morning when I went for a walk.",
         "additional_info": "Thomas broke my heart years ago. We've been just friends since, but it was sometimes awkward.",
+        "personality": "Alice is reserved and intellectual, preferring books to social gatherings. She has a strong moral compass and believes in justice, which is why she became an environmental lawyer. While generally calm and composed, she can be deeply emotional about past relationships. She's observant and analytical, often noticing details others miss. Despite her outward confidence, she harbors insecurities about her past failed relationship with Thomas.",
+        "appearance": "Mid-30s woman with shoulder-length brown hair typically worn in a practical ponytail. She dresses in casual, outdoorsy clothing and wears minimal makeup. She's physically fit from regular hiking and yoga.",
+        "speech_pattern": "Speaks carefully and precisely, using proper grammar and sometimes technical terms. Tends to pause before answering difficult questions, as if carefully weighing her words.",
         "guilty": False,
         "image": "suspect_alice.png",
         "map_position": (4, 4)
@@ -94,6 +98,9 @@ SUSPECTS = [
         "alibi": "I was fishing at the other side of the lake until around midnight, then went straight to sleep.",
         "testimony": "Thomas was threatening to report some... creative accounting I did that made us both look good. He suddenly grew a conscience.",
         "additional_info": "Thomas and I were competing for the same promotion. He found out I fudged some numbers.",
+        "personality": "Bob is ambitious and ruthlessly competitive, willing to bend rules to get ahead. He's charming and sociable on the surface but harbors deep insecurities about his status. He's easily threatened by others' success and has a quick temper when challenged. Despite his cutthroat nature in business, he can be generous and loyal to friends who don't compete with him. He's driven by a fear of failure and will go to great lengths to maintain his image of success.",
+        "appearance": "Mid-30s man with perfectly styled short blonde hair and an expensive haircut. Always dressed impeccably in designer outdoor gear that looks barely used. Maintains a fit physique through regular gym sessions.",
+        "speech_pattern": "Speaks confidently and quickly, often using business jargon and industry terms. Has a habit of deflecting uncomfortable questions with humor or counter-questions. Occasionally stutters when genuinely nervous.",
         "guilty": True,  # Bob is the murderer
         "image": "suspect_bob.png",
         "map_position": (9, 9)
@@ -103,6 +110,9 @@ SUSPECTS = [
         "alibi": "I was drinking with Thomas until around 11PM, then went to sleep in my tent.",
         "testimony": "We actually had a good talk and cleared the air about my divorce. I'm sad we finally made peace just before he died.",
         "additional_info": "I was angry at him for taking my wife's side in our divorce, but we made peace that night.",
+        "personality": "Charlie is emotionally volatile with a tendency to hold grudges, though he genuinely tries to be a good person. He struggles with alcohol when under stress, which can make his emotions even more unpredictable. He values family deeply and was devastated by his divorce and the perceived betrayal from Thomas. He's generally honest to a fault, wearing his emotions on his sleeve. Despite his rough exterior, he's surprisingly sensitive and can be deeply hurt by criticism or rejection.",
+        "appearance": "Late 30s man with unkempt dark hair and a perpetual five o'clock shadow. Usually dressed in worn jeans and flannel shirts, with a distinctive green jacket he's had for years. Physically strong from his construction work.",
+        "speech_pattern": "Speaks in a gruff, direct manner with occasional profanity. His voice often reveals his emotional state - rising when upset and softening when reflective. Tends to speak in shorter sentences and simple terms.",
         "guilty": False,
         "image": "suspect_charlie.png",
         "map_position": (14, 14)
@@ -141,6 +151,31 @@ Bob Johnson is the murderer. The evidence points to him:
 Bob met Thomas as requested, argued about the accounting fraud, and in fear of losing his career, 
 grabbed a rock and struck Thomas in the head. He then tried to make it look like a robbery gone wrong.
 """
+
+# Character relationships and dynamics
+CHARACTER_DYNAMICS = {
+    "History": """
+    Thomas, Alice, and Bob went to college together, where Thomas and Alice dated briefly. 
+    Bob was always envious of Thomas's success and charisma, though they maintained a friendship.
+    Charlie met Thomas when he married Thomas's sister five years ago, but their relationship 
+    became strained during the divorce proceedings when Thomas sided with his sister.
+    """,
+    
+    "Recent Tensions": """
+    In the weeks before the camping trip, tensions were high:
+    - Bob and Thomas were competing for the same promotion at work
+    - Charlie's divorce from Thomas's sister had just been finalized
+    - Alice had been avoiding Thomas since he made unwelcome advances at a previous gathering
+    """,
+    
+    "Camping Trip Dynamics": """
+    The camping trip was organized by Alice as a way to get the group together 
+    one last time before Bob and Thomas would find out who got the promotion.
+    During the trip, Charlie and Thomas were seen arguing on the first night, but 
+    seemed to make peace on the second day. Bob remained outwardly friendly with Thomas
+    but witnesses noticed tension whenever work was discussed.
+    """
+}
 
 # Function to generate map entities for clues and suspects
 def generate_map_entities():

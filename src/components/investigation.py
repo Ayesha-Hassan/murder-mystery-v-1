@@ -1,5 +1,6 @@
 import pygame
 from components.entity import active_objs
+from data.case_data import SUSPECTS, CLUES
 
 class Investigation:
     def __init__(self):
@@ -12,8 +13,13 @@ class Investigation:
         self.all_suspects_interrogated = False
         self.accusation_time = 0
         self.accused_suspect = None
+        self.accused_weapon = None
+        self.guilty_suspect = None  # Store the guilty suspect for reference
         self.debug_mode = True  # Enable debug output
         self.last_debug_time = 0
+        
+        # Load full suspect data from case_data.py
+        self.full_suspect_data = SUSPECTS
         
         # Add to active objects so update method is called
         active_objs.append(self)
@@ -57,6 +63,7 @@ class Investigation:
                 total_suspects += 1
                 if suspect.guilty:
                     guilty_suspect = suspect
+                    self.guilty_suspect = suspect  # Store the guilty suspect
         
         if len(self.interrogated_suspects) == total_suspects and total_suspects > 0:
             self.all_suspects_interrogated = True
@@ -66,7 +73,7 @@ class Investigation:
         # the player can make an accusation
         if self.all_clues_found and self.all_suspects_interrogated:
             print("You have all the evidence you need to solve the case!")
-            print("Press SPACE key to accuse the guilty suspect when near them!")
+            print("Press SPACE to make an accusation!")
 
     def update(self):
         # Periodic debug output
@@ -74,83 +81,66 @@ class Investigation:
         if self.debug_mode and current_time - self.last_debug_time > 10000:  # Every 10 seconds
             print("DEBUG: Investigation update method is being called")
             self.last_debug_time = current_time
+    
+    def accuse_suspect(self, suspect, weapon=None):
+        """
+        Make an accusation against a specific suspect using a specific weapon.
+        
+        Args:
+            suspect: The Suspect object being accused
+            weapon: The Clue object identified as the murder weapon
             
-        from components.player import Player
-        from components.suspect import Suspect
-        from components.physics import Body
-        from core.input import keys_down
+        Returns:
+            True if the accusation was correct, False otherwise
+        """
+        if self.game_solved or self.game_lost:
+            return False
+            
+        self.accusation_time = pygame.time.get_ticks()
+        self.accused_suspect = suspect
+        self.accused_weapon = weapon
         
-        # Only allow accusation if all clues and suspects have been processed
-        # and the game is not already solved or lost
-        if not (self.all_clues_found and self.all_suspects_interrogated) or self.game_solved or self.game_lost:
-            return
-        
-        # Check for SPACE key to make accusation (instead of A key)
-        if pygame.K_SPACE not in keys_down:
-            return
-        
-        # Debug message
         if self.debug_mode:
-            print("DEBUG: Investigation update - SPACE key detected")
-            
-        # Find the player entity
-        from core.area import area
-        player_entity = area.search_for_first(Player)
+            print(f"DEBUG: Making accusation against {suspect.name} with weapon {weapon.name if weapon else 'None'}")
         
-        if not player_entity:
-            if self.debug_mode:
-                print("DEBUG: Could not find player entity")
-            return
-            
-        # Check if player is near any suspect
-        player_body = player_entity.get(Body)
-        if not player_body:
-            if self.debug_mode:
-                print("DEBUG: Player does not have a body component")
-            return
-            
-        if self.debug_mode:
-            print(f"DEBUG: Player position: ({player_entity.x}, {player_entity.y})")
-            print(f"DEBUG: Checking {len(area.entities)} entities for suspects")
-            
-        for e in area.entities:
-            suspect = e.get(Suspect)
-            if not suspect:
-                continue
-                
-            if self.debug_mode:
-                print(f"DEBUG: Found suspect {suspect.name} at position ({e.x}, {e.y})")
-                
-            suspect_body = e.get(Body)
-            if not suspect_body:
-                if self.debug_mode:
-                    print(f"DEBUG: Suspect {suspect.name} does not have a body component")
-                continue
-                
-            # Calculate distance to suspect
-            player_x = player_entity.x + player_body.hitbox.x
-            player_y = player_entity.y + player_body.hitbox.y
-            suspect_x = e.x + suspect_body.hitbox.x
-            suspect_y = e.y + suspect_body.hitbox.y
-            
-            distance = ((player_x - suspect_x) ** 2 + (player_y - suspect_y) ** 2) ** 0.5
-            
-            if self.debug_mode:
-                print(f"DEBUG: Distance to {suspect.name}: {distance}")
-            
-            # If close enough, check if this is the guilty suspect
-            if distance < 64:
-                if self.debug_mode:
-                    print(f"DEBUG: Making accusation against {suspect.name}")
-                    
-                self.accusation_time = pygame.time.get_ticks()
-                self.accused_suspect = suspect
-                
-                if suspect.guilty:
-                    print(f"You've correctly identified the murderer: {suspect.name}!")
-                    print("Congratulations, you've solved the case!")
-                    self.game_solved = True
-                else:
-                    print(f"You've accused {suspect.name}, but they're innocent!")
-                    print("You failed to solve the case. The real murderer got away!")
-                    self.game_lost = True 
+        # Make sure we have a reference to the guilty suspect
+        if not self.guilty_suspect:
+            from core.area import area
+            from components.suspect import Suspect
+            for entity in area.entities:
+                suspect_component = entity.get(Suspect)
+                if suspect_component and suspect_component.guilty:
+                    self.guilty_suspect = suspect_component
+                    break
+        
+        # Find the correct murder weapon
+        correct_weapon = "Bloody Rock"  # Default
+        for clue in CLUES:
+            if "murder weapon" in clue.get("description", "").lower():
+                correct_weapon = clue["name"]
+                break
+        
+        # Check if suspect is correct
+        suspect_correct = suspect.guilty
+        weapon_correct = weapon and weapon.name == correct_weapon
+        
+        # For game results, only the suspect needs to be correct
+        if suspect_correct:
+            print(f"You've correctly identified the murderer: {suspect.name}!")
+            if weapon_correct:
+                print(f"And you correctly identified the {weapon.name} as the murder weapon!")
+            else:
+                print(f"But the real murder weapon was the {correct_weapon}, not the {weapon.name if weapon else 'unspecified weapon'}.")
+            print("Congratulations, you've solved the case!")
+            self.game_solved = True
+            return True
+        else:
+            print(f"You've accused {suspect.name}, but they're innocent!")
+            print(f"The real murderer was {self.guilty_suspect.name if self.guilty_suspect else 'someone else'}!")
+            if weapon and weapon.name == correct_weapon:
+                print(f"However, you correctly identified the {weapon.name} as the murder weapon.")
+            else:
+                print(f"The real murder weapon was the {correct_weapon}, not the {weapon.name if weapon else 'unspecified weapon'}.")
+            print("You failed to solve the case. The real murderer got away!")
+            self.game_lost = True
+            return False 
