@@ -5,7 +5,7 @@ from core.camera import camera
 from components.entity import active_objs
 from components.physics import Body, triggers
 
-movement_speed = 2
+movement_speed = 8
 
 class Player:
     def __init__(self):

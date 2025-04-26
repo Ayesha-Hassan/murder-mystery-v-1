@@ -3,7 +3,7 @@ from math import ceil
 
 map_folder_location = "content/maps"
 image_path = "content/images"
-tile_size = 32
+tile_size = 16
 
 class TileKind:
     def __init__(self, name, image, is_solid):

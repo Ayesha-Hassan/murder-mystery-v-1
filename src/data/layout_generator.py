@@ -9,6 +9,7 @@ import os
 import json
 import random
 import re
+from xml.dom import HierarchyRequestErr
 from groq import Groq
 from typing import List, Dict, Tuple, Any
 
@@ -120,7 +121,9 @@ def generate_layout_with_llm(clues: List[Dict[str, Any]], suspects: List[Dict[st
         print("Attempting to generate layout with Llama 3 via Groq API...")
         # Get map dimensions
         width, height = get_map_dimensions(map_file)
-        
+        width/=2
+        height/=2
+        print(f"board dims: {width} , {height}")
         # Create a prompt for the LLM
         scenario_description = "\n".join([
             clue["description"] for clue in clues

@@ -13,10 +13,10 @@ entity_factories = [
     lambda args: Entity(Player(), Sprite("player.png"), Body(8, 48, 16, 16), Investigation()),
 
     # 1
-    lambda args: Entity(Sprite("tree.png"), Body(16, 96, 32, 32)),      
+    lambda args: Entity(Sprite("tree.png"), Body(16, 32, 32, 32)),      
 
     # 2
-    lambda args: Entity(Sprite("rock.png"), Body()), 
+    lambda args: Entity(Sprite("rock3.png"), Body()), 
 
     # 3
     lambda args: Entity(Teleporter(args[0], args[1], args[2]), Sprite("teleporter_up.png")),
@@ -35,6 +35,21 @@ entity_factories = [
     
     # 8 - Suspect entity
     lambda args: Entity(Suspect(args[0], args[1], args[2], args[3] == "true"), Sprite(args[4]), Body(8, 48, 16, 16)),
+
+    #9 - grass blades 1
+    lambda args: Entity(Sprite("grassblade1.png"), Body()), 
+
+    #10 - grass blades 2
+    lambda args: Entity(Sprite("grassblade2.png"), Body()), 
+
+    #11 - water puddle
+    lambda args: Entity(Sprite("water_puddle.png"), Body()), 
+
+    # 12
+    lambda args: Entity(Sprite("rock4.png"), Body()), 
+
+    #13
+    lambda args: Entity(Sprite("stone1.png"), Body()), 
 ]
 
 def create_entity(id, x, y, data=None):
