@@ -16,7 +16,7 @@ entity_factories = [
     lambda args: Entity(Sprite("tree.png"), Body(16, 32, 32, 32)),      
 
     # 2
-    lambda args: Entity(Sprite("rock3.png"), Body()), 
+    lambda args: Entity(Sprite("rock3.png")), 
 
     # 3
     lambda args: Entity(Teleporter(args[0], args[1], args[2]), Sprite("teleporter_up.png")),
@@ -37,19 +37,25 @@ entity_factories = [
     lambda args: Entity(Suspect(args[0], args[1], args[2], args[3] == "true"), Sprite(args[4]), Body(8, 48, 16, 16)),
 
     #9 - grass blades 1
-    lambda args: Entity(Sprite("grassblade1.png"), Body()), 
+    lambda args: Entity(Sprite("grassblade1.png")), 
 
     #10 - grass blades 2
-    lambda args: Entity(Sprite("grassblade2.png"), Body()), 
+    lambda args: Entity(Sprite("grassblade2.png")), 
 
     #11 - water puddle
-    lambda args: Entity(Sprite("water_puddle.png"), Body()), 
+    lambda args: Entity(Sprite("water_puddle.png")), 
 
     # 12
-    lambda args: Entity(Sprite("rock4.png"), Body()), 
+    lambda args: Entity(Sprite("rock4.png")), 
 
     #13
-    lambda args: Entity(Sprite("stone1.png"), Body()), 
+    lambda args: Entity(Sprite("stone1.png")), 
+
+    #14
+    lambda args: Entity(Sprite("campsite.png")),
+
+    #15
+    lambda args: Entity(Sprite("path.png")),
 ]
 
 def create_entity(id, x, y, data=None):
